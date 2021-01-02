@@ -30,3 +30,12 @@
 - Axios
 - Material-UI
 - Local storage
+
+### To run  the project
+1. `cd meme-sharer`
+2. `npm  i`
+3. `cd client`
+4. `npm i`
+5. `cd ..`
+6. `npm run dev`
+7. Project will run on `PORT 3000`
