@@ -12,7 +12,7 @@ const Transporter = nodemailer.createTransport({
 
 const sendEmailOTP = async (email) => {
   const OTP = Math.floor(100000 + Math.random() * 900000);
-  const message = `Welcome to Nodejs-Starter-JS! <br><br> Your verification code is <h1>${OTP}</h1>`;
+  const message = `Welcome to MemeVerse! <br><br> Your verification code is <h1>${OTP}</h1>`;
   // send mail with defined transport object
   let emailInfo = await Transporter.sendMail({
     from: '<morolswediu@gmail.com>',

@@ -7,7 +7,7 @@ const client = configTwilio(accountSid, authToken);
 
 const sendSMS = async (number) => {
   const OTP = Math.floor(100000 + Math.random() * 900000);
-  const message = `Welcome to Nodejs-Starter-JS! Your verification code is ${OTP}`;
+  const message = `Welcome to MemeVerse! Your verification code is ${OTP}`;
   let smsInfo = await client.messages.create({
     body: message,
     from: process.env.TWILIO_ACCOUNT_NUMBER,

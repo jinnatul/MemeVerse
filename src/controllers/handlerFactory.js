@@ -1,15 +1,6 @@
 import AppError from '../../utils/AppError';
 import catchAsync from '../middlewares/catchAsync';
-
-// Response sessions
-const sendData = (res, status, data) => {
-  const date = new Date();
-  res.status(status).json({
-    status: 'ok',
-    requestTime: date.toLocaleString(),
-    data,
-  });
-};
+import sendData from '../../utils/response/sendData';
 
 // Create One
 export const createOne = (Model) => catchAsync(async (req, res, next) => {
@@ -35,7 +26,7 @@ export const createOne = (Model) => catchAsync(async (req, res, next) => {
   };
 
   const data = await Model.create(body);
-  return sendData(res, 201, data);
+  return sendData(res, data);
 });
 
 // Get All
@@ -43,7 +34,19 @@ export const getAll = (Model) => catchAsync(async (req, res, next) => {
   res.setHeader('Content-type', 'application/json');
 
   const docs = await Model.find();
-  return sendData(res, 200, docs);
+  const modelName = Model.collection.collectionName;
+  switch (modelName) {
+    case 'posts': {
+      for (let i = 0; i < docs.length; i += 1) {
+        docs[i]._doc.likes = docs[i].likeCount.length;
+        docs[i].likeCount = undefined;
+      }
+      return sendData(res, docs);
+    }
+    default: {
+      return sendData(res, docs);
+    }
+  }
 });
 
 // Get One
@@ -56,7 +59,17 @@ export const getOne = (Model) => catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  return sendData(res, 200, doc);
+  const modelName = Model.collection.collectionName;
+  switch (modelName) {
+    case 'posts': {
+      doc._doc.likes = doc.likeCount.length;
+      doc.likeCount = undefined;
+      return sendData(res, doc);
+    }
+    default: {
+      return sendData(res, doc);
+    }
+  }
 });
 
 // Modify One
@@ -95,5 +108,5 @@ export const modifyOne = (Model) => catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  return sendData(res, 200, doc);
+  return sendData(res, doc);
 });
