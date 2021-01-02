@@ -32,7 +32,7 @@
 - Local storage
 
 ### To run  the project
-1. `cd meme-sharer`
+1. `cd MemeVerse`
 2. `npm  i`
 3. `cd client`
 4. `npm i`
