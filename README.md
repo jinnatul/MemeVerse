@@ -39,3 +39,8 @@
 5. `cd ..`
 6. `npm run dev`
 7. Project will run on `PORT 3000`
+
+### Example User (Login)
+```
+email: 
+```
