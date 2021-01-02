@@ -3,16 +3,10 @@ import AppError from '../../utils/AppError';
 import User from '../models/User';
 import sendSMS from '../../config/twilioSMS';
 import sendEmailOTP from '../../config/emailOTP';
+import sendData from '../../utils/response/sendData';
 import {
   createJWT,
 } from '../middlewares/jwtToken';
-
-const sendData = (res, data) => {
-  res.json({
-    status: 'ok',
-    data,
-  });
-};
 
 const sendMessage = (res, type, statusCode, message) => {
   res.status(statusCode).json({
@@ -21,8 +15,9 @@ const sendMessage = (res, type, statusCode, message) => {
   });
 };
 
-// Phone verification
-const smsAuthentication = catchAsync(async (req, res, next) => {
+/* Phone verification */
+// Registration
+export const smsAuthentication = catchAsync(async (req, res, next) => {
   res.setHeader('Content-type', 'application/json');
 
   const {
@@ -50,7 +45,8 @@ const smsAuthentication = catchAsync(async (req, res, next) => {
   return sendMessage(res, 'ok', 201, `Send an SMS verification code to ${phone}`);
 });
 
-const smsVerify = catchAsync(async (req, res, next) => {
+// account verification
+export const smsVerify = catchAsync(async (req, res, next) => {
   res.setHeader('Content-type', 'application/json');
 
   const {
@@ -80,7 +76,8 @@ const smsVerify = catchAsync(async (req, res, next) => {
   return sendData(res, userInfo);
 });
 
-const signInWithPhone = catchAsync(async (req, res, next) => {
+// signin with phone
+export const signInWithPhone = catchAsync(async (req, res, next) => {
   res.setHeader('Content-type', 'application/json');
 
   const {
@@ -107,8 +104,9 @@ const signInWithPhone = catchAsync(async (req, res, next) => {
   return sendData(res, userInfo);
 });
 
-// Email verification
-const emailAuthentication = catchAsync(async (req, res, next) => {
+/* Email verification */
+// Registration
+export const emailAuthentication = catchAsync(async (req, res, next) => {
   res.setHeader('Content-type', 'application/json');
 
   const {
@@ -134,7 +132,8 @@ const emailAuthentication = catchAsync(async (req, res, next) => {
   return sendMessage(res, 'ok', 201, `Send an OTP code to ${email}`);
 });
 
-const emailVerify = catchAsync(async (req, res, next) => {
+// account verification
+export const emailVerify = catchAsync(async (req, res, next) => {
   res.setHeader('Content-type', 'application/json');
 
   const {
@@ -164,10 +163,35 @@ const emailVerify = catchAsync(async (req, res, next) => {
   return sendData(res, userInfo);
 });
 
-export {
-  smsAuthentication,
-  smsVerify,
-  signInWithPhone,
-  emailAuthentication,
-  emailVerify,
-};
+// signin with email
+export const signInWithEmail = catchAsync(async (req, res, next) => {
+  res.setHeader('Content-type', 'application/json');
+
+  const {
+    email,
+    password,
+  } = req.body;
+
+  if (!email) return next(new AppError('Provide your email.', 400));
+  if (!password) return next(new AppError('Provide your password.', 400));
+
+  // Check if user exists & password is correct
+  const userInfo = await User.findOne({
+    email,
+  }).select('+password');
+  if (!userInfo || !(await userInfo.comparePassword(
+    password,
+    userInfo.password,
+  ))) {
+    next(new AppError('Incorrect crediantial.', 400));
+  }
+
+  userInfo._doc.token = createJWT(userInfo._id);
+  userInfo.password = undefined;
+  const { posts } = userInfo;
+  for (let i = 0; i < posts.length; i += 1) {
+    posts[i]._doc.likes = posts[i].likeCount.length;
+    posts[i].likeCount = undefined;
+  }
+  return sendData(res, userInfo);
+});

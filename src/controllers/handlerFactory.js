@@ -66,6 +66,14 @@ export const getOne = (Model) => catchAsync(async (req, res, next) => {
       doc.likeCount = undefined;
       return sendData(res, doc);
     }
+    case 'users': {
+      const { posts } = doc;
+      for (let i = 0; i < posts.length; i += 1) {
+        posts[i]._doc.likes = posts[i].likeCount.length;
+        posts[i].likeCount = undefined;
+      }
+      return sendData(res, doc);
+    }
     default: {
       return sendData(res, doc);
     }

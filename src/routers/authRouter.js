@@ -6,6 +6,7 @@ import {
   signInWithPhone,
   emailAuthentication,
   emailVerify,
+  signInWithEmail,
 } from '../controllers/authController';
 
 const router = express.Router();
@@ -75,13 +76,14 @@ router.get('/facebook/callback',
   ));
 
 // Phone verification
-router.post('/sms', smsAuthentication);
-router.post('/sms/verify', smsVerify);
-router.post('/signin', signInWithPhone);
+router.post('/signup/phone', smsAuthentication);
+router.post('/phone/verify', smsVerify);
+router.post('/signin/phone', signInWithPhone);
 
 // Email verification
-router.post('/email', emailAuthentication);
+router.post('/signup/email', emailAuthentication);
 router.post('/email/verify', emailVerify);
+router.post('/signin/email', signInWithEmail);
 
 /* Social authentication */
 router.get('/success', (req, res) => res.json({
