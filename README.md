@@ -1,27 +1,32 @@
-# Nodejs-Starter-JS
+# Back-End (API)
 
-### Features
+- Authentication
+  - Normal auth
+    - Email auth with OTP
+    - Phone auth with OTP
+  - Social auth with OTP
+    - Google
+    - Facebook
+    - GitHub
+    - Twitter
+    - LinkedIn
+- Profile
+  - Get profile
+  - Forgot password with OTP verification
+- Meme Post 
+  - Create post 
+  - Get All posts
+  - Get each post
+  - Image upload on Cloudinary
+- Comments
+  - Create comments
+  - Delete comments
+- Like Posts
+- UnLike Posts
 
-- Support ES6+
-- API documentation using [apidocjs](https://apidocjs.com/)
-- MVC Project Structure
-- API Validation layer
-- Send error message (Development / Production)
-- Local Authentication using Email and Password
-- Passport Authentication via Facebook, Google, GitHub, LinkedIn, Instagram, Twitter
-- JWT Tokens Authorization
-- Role base Authorization
-- Profile Details
-- Change Password
-- Forgot Password
-- Reset Password
-- File upload
-- Linting with Eslint.
-- Caching with [Redis](https://redis.io/)
-- Error logging
-- Implement CORS policy
-- Unit Testing using [Jest](https://jestjs.io/)
-- Deployment: via Docker
-- Protect brute force attack (Block IP address)
-- Implement NoSQL query injections
-- Implement data sanitization against XSS
+### Frontend
+- ReactJS
+- React router
+- Axios
+- Material-UI
+- Local storage
